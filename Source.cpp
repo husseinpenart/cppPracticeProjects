@@ -3,24 +3,51 @@
 #include <string>
 using std::format;
 using std::cout;
-
-//void func() {
-//	static auto i = 10;
-//	cout << format("refrence to number {}\n", ++i);
-//}
-void func(const std::string& s) {
-	static auto i = 10;
-	cout << format("refrence to string is {}\n", s);
+//simpleCalssses
+class C1 {
+    int c1val{};
+public:
+    void setvalue(int value);
+    int getvalue();
+};
+void C1::setvalue(int value) {
+    c1val = value;
 }
+int C1::getvalue() {
+    return c1val;
+}
+
+//struct types 
+struct MyStruct
+{
+    int ia{};
+    int ib{};
+    int ic{};
+    
+};
+
+//accessor 
+class A {
+    int ia{};
+    int ib{};
+    int ic{};
+public:
+    A(int a, int b, int c) : ia(a), ib(b), ic(c) {}
+    void seta(int a) { ia = a; }
+    void setb(int b) { ib = b; }
+    void setc(int c) { ic = c; }
+    int geta() const { return ia; }
+    int getb() const { return ib; }
+    int getc() const { return ic; }
+};
+//accessor 
+
 int main() {
-	//cout << "lesson two started";
-	std::string s {"this is a long string as a exmpale"};
-	cout << format("value is {}\n" , s);
-	func(s);
-	//func();
-	//func();
-	//func();
-	//func();
-	//func();
-	//func();
+    //C1 o1;
+    //o1.setvalue(47);
+    MyStruct o1{ 47,45,455 };
+    cout << format("value is {}\n", o1.ia,o1.ib, o1.ic);
+
+    A o1{ 47, 73, 103 };
+    cout << format("ia {}, ib {}, ic {}\n", o1.geta(), o1.getb(), o1.getc());
 }
