@@ -1,53 +1,62 @@
+﻿
+
 #include <format>
-#include <iostream>
 #include <string>
+#include <string_view>
+#include <vector>
+#include <numbers>
+
 using std::format;
-using std::cout;
-//simpleCalssses
-class C1 {
-    int c1val{};
-public:
-    void setvalue(int value);
-    int getvalue();
-};
-void C1::setvalue(int value) {
-    c1val = value;
-}
-int C1::getvalue() {
-    return c1val;
-}
+using std::string;
+using std::vector;
+using std::numbers::pi;
 
-//struct types 
-struct MyStruct
-{
-    int ia{};
-    int ib{};
-    int ic{};
-    
+template<typename T>
+struct Frac {
+    T n;
+    T d;
 };
 
-//accessor 
-class A {
-    int ia{};
-    int ib{};
-    int ic{};
-public:
-    A(int a, int b, int c) : ia(a), ib(b), ic(c) {}
-    void seta(int a) { ia = a; }
-    void setb(int b) { ib = b; }
-    void setc(int c) { ic = c; }
-    int geta() const { return ia; }
-    int getb() const { return ib; }
-    int getc() const { return ic; }
+// format specialization
+template <typename T>
+struct std::formatter<Frac<T>> : std::formatter<unsigned> {
+    template <typename Context>
+    auto format(const Frac<T>& f, Context& ctx) const {
+        return format_to(ctx.out(), "{}/{}", f.n, f.d);
+    }
 };
-//accessor 
+
+// format print
+template<typename... Args>
+constexpr void print(const std::string_view str_fmt, Args&&... args) {
+    fputs(std::vformat(str_fmt, std::make_format_args(args...)).c_str(), stdout);
+}
 
 int main() {
-    //C1 o1;
-    //o1.setvalue(47);
-    MyStruct o1{ 47,45,455 };
-    cout << format("value is {}\n", o1.ia,o1.ib, o1.ic);
+    const int inta{ 47 };
+    const char* human{ "earthlings" };
+    const string alien{ "vulcans" };
+    const double dpi{ pi };
 
-    A o1{ 47, 73, 103 };
-    cout << format("ia {}, ib {}, ic {}\n", o1.geta(), o1.getb(), o1.getc());
+    print("inta is {}\n", inta);
+    print("Hello {}\n", human);
+
+    print("Hello {} we are {}\n", human, alien);
+    print("Hello {1} we are {0}\n", human, alien);
+
+    print("π is {}\n", dpi);
+    print("π is {:.5}\n", dpi);
+    print("inta is {1:}, π is {0:.5}\n", dpi, inta);
+
+    print("inta is [{:*<10}]\n", inta);
+    print("inta is [{:0>10}]\n", inta);
+    print("inta is [{:^10}]\n", inta);
+    print("inta is [{:_^10}]\n", inta);
+
+    print("{:>8}: [{:04X}]\n", "Hex", inta);
+    print("{:>8}: [{:4o}]\n", "Octal", inta);
+    print("{:>8}: [{:4d}]\n", "Decimal", inta);
+
+    Frac<long> n{ 3, 5 };
+    print("Frac: {}\n", n);
 }
